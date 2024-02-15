@@ -17,7 +17,8 @@ module.exports = {
         filename: 'main.js',
  
         // and this is the path of the output bundle, "dist" folder
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist')
+
     },
  
     // we are in production mode
