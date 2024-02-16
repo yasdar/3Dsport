@@ -24,7 +24,7 @@ export class Camera {
         0.1, //Near
         1000 //Far
       )
-      this._camera.position.set(0, 8, 10)
+      this._camera.position.set(0, 6, 8)
       this.controls = new OrbitControls(this._camera, renderer.domElement)
         this.controls.mouseButtons = {
           LEFT: THREE.MOUSE.LEFT,
@@ -32,7 +32,7 @@ export class Camera {
           RIGHT: undefined,
         }
         //vertical rotation
-        this.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 20
+       // this.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 20
         //zoom
         this.controls.minDistance = 3 //camera z = 3
         this.controls.maxDistance = 20 //camera z = 7
