@@ -8,7 +8,9 @@ import THREE, { PerspectiveCamera, Scene, WebGLRenderer,Mesh } from "three";
 import { Terrain } from "./toolObjects/Terrain";
 import { Camera } from "./Camera";
 import { Player } from "./toolObjects/Player1";
-import { AngleBetweenTwoPointsInPlanXZ } from "./utils";
+import { Megaphone } from "./toolObjects/Megaphone1";
+import { AngleBetweenTwoPointsInPlanXZ, distanceVector } from "./utils";
+import { Ball } from "./toolObjects/Ball1";
 
 export class App
 {
@@ -21,7 +23,7 @@ export class App
     public ray_caster : THREE.Raycaster;
     pickableObjects: THREE.Mesh[] = []
     intersectedObject!: THREE.Object3D | null
-
+    addedObgetcs:Array<any> = [];
 
     onDown:boolean = false;
     selectedObject:{
@@ -54,10 +56,12 @@ export class App
         this.addLight();
         this.terrain = new Terrain(this.scene);
         this.terrainLimits = this.terrain.terrainLimits;
+        this.pickableObjects.push(this.terrain._terrainMesh);
         this.selectedObject={container:null,Action:'0'}
         this.ray_caster = new THREE.Raycaster()
 
         this.addToolEvents();
+        this.addedObgetcs = [];
       //listen too reseize
         window.addEventListener("resize", this.onWindowResize.bind(this), false);
 
@@ -91,12 +95,21 @@ export class App
 
           if(intersetcs[0].object.name =="terrain"){ 
            // console.log("on terrain -->",intersetcs[0].object.name)
-          }else if(intersetcs[0].object.name =="_move" || intersetcs[0].object.name =="_rotate"){
-            //console.log("on object with tool -->",intersetcs[0].object.name)
+           this.highlightSelected();
+          }else if(
+            intersetcs[0].object.name =="_move" || 
+            intersetcs[0].object.name =="_rotate"|| 
+            intersetcs[0].object.name =="_scaleUP"|| 
+            intersetcs[0].object.name =="_scaleDown"||
+            intersetcs[0].object.name =="clickableZone"
+            ){
+            console.log("on object with tool -->",intersetcs[0].object.name)
             this.selectedObject={
               container:intersetcs[0].object.parent,
               Action:intersetcs[0].object.name
             }
+            
+            this.highlightSelected();
           }
          
           
@@ -121,7 +134,7 @@ export class App
                 AngleBetweenTwoPointsInPlanXZ(
                   intersectionPoint,
                   this.selectedObject.container.position
-                )
+                );
             }
 
         if(this.selectedObject.Action =='_move'){
@@ -134,6 +147,14 @@ export class App
           this.selectedObject.container.position.z = intersectionPoint.z;
         }
 
+
+        if(this.selectedObject.Action =='_scaleUP'){
+          this.selectedObject.container.userData.Me.scaleObj(0.1)
+            }
+
+        if(this.selectedObject.Action =='_scaleDown' ){
+          this.selectedObject.container.userData.Me.scaleObj(-0.1)
+            }
 
         }
     }
@@ -192,6 +213,9 @@ export class App
         this.mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
         this.onDown = false;
         this.camera.controls.enabled = true
+        if(this.selectedObject.container){
+          this.selectedObject.container.userData.Me.scaled = false;
+        }
         this.selectedObject= {container:null,Action:"0"};
       })
 
@@ -199,17 +223,57 @@ export class App
 
       //add an object
       $('#test1').on('pointerdown', (event: any) => {
-        this.addObjectFix()
+        this.addPlayer()
       })
+
+      $('#test2').on('pointerdown', (event: any) => {
+        this.addObject1()
+      })
+
+
+      $('#test3').on('pointerdown', (event: any) => {
+        this.addObject2()
+      })
+
+    }
+    private addObject1(){
+      this.highlightSelected();
+      const mp:Megaphone = new Megaphone(this.scene,0.2);
+      mp.container.position.z = Math.random()*2
+      this.pickableObjects.push(mp._rotate);
+      this.pickableObjects.push(mp._move);
+      this.addedObgetcs.push(mp)
     }
 
-    private addObjectFix() {
+    private addObject2(){
+      this.highlightSelected();
+      const ba:Ball = new Ball(this.scene,0.2);
+      ba.container.position.z = Math.random()*2
+      this.pickableObjects.push(ba._rotate);
+      this.pickableObjects.push(ba._move);
+      this.addedObgetcs.push(ba)
+    }
 
+    private addPlayer() {
+      this.highlightSelected();
       const player:Player = new Player(this.scene,0.2);
-      this.pickableObjects.push(this.terrain._terrainMesh);
+      player.container.position.x = Math.random()*2
+      this.pickableObjects.push(player.clickableZone);
       this.pickableObjects.push(player._rotate);
       this.pickableObjects.push(player._move);
+      this.pickableObjects.push(player._scaleUP);
+      this.pickableObjects.push(player._scaleDown);
+      this.addedObgetcs.push(player)
+    }
 
+    highlightSelected(){
+      if(this.selectedObject.container){this.selectedObject.container.userData.Me.showTools()}
+
+      this.addedObgetcs.forEach((ob:any)=>{
+        if(ob.container.name != this.selectedObject.container?.name){
+            ob.hideTools();
+        }
+      })
     }
 }
 
@@ -220,3 +284,10 @@ $(function () {
   console.log('doc ready');
   new App();
 });
+
+
+/**To Do */
+//loading ... preload needed assets
+//change scene
+//ajouter le stade envoyer par Khaled
+//diviser le panneau a gauche joueurs / equipments 

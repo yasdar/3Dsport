@@ -32,7 +32,7 @@ export class Camera {
           RIGHT: undefined,
         }
         //vertical rotation
-       // this.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 20
+        this.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 40
         //zoom
         this.controls.minDistance = 3 //camera z = 3
         this.controls.maxDistance = 20 //camera z = 7
