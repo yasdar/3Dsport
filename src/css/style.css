@@ -60,5 +60,29 @@ body {
   }
   .clickable{
     cursor: pointer;
+    max-height:32px;
+    width: auto;
+    margin-left: 2px;
+    margin-right: 2px;
   }
+  .flipped {
+    transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -khtml-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+}
+
+#loaderImg{
+  animation: rotation 2s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
   

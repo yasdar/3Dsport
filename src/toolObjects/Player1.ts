@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import  { Tools_Options } from '../config';
+import $ from "jquery";
 export class Player {
 
     container:THREE.Object3D;
@@ -8,17 +10,18 @@ export class Player {
     _player:any;
     _rotate!: THREE.Mesh;
     _move!: THREE.Mesh;
-    _scaleUP: THREE.Mesh;
-    _scaleDown: THREE.Mesh;
-
+   _active:boolean = true;
     obMesh: Array<any> = [];
     scene:THREE.Scene;
+
     CurrentScale:number = 1;
-    scaled:boolean = false;
-    constructor(scene:THREE.Scene,terrainZ:number) {
+    scaleCounter:number = 1;
+    _index:number;
+    constructor(scene:THREE.Scene,terrainZ:number,index:number) {
     this.scene = scene;
+    this._index = index;
     this.container = new THREE.Object3D();
-    this.container.name = "player";
+    this.container.name = "player"+this._index;
     this.container.userData ={Me:this};
     this.scene.add(this.container);
     this.container.position.set(0,terrainZ,0)
@@ -26,18 +29,30 @@ export class Player {
     this.addTools();
     this.addObj();
 
+
+    $('#bt_scale').removeClass('flipped');
+    $('#objTool').hide();
+    $('#loaderImg').show();
+    
     }showTools(){
 
         this._rotate.visible = true;
         this._move.visible = true;
-        this._scaleUP.visible = true;
-        this._scaleDown.visible = true;
+
+        this._active = true;
+
+        //actual scale tool button state
+        if(this.scaleCounter <= Tools_Options.maxScale){
+          $('#bt_scale').removeClass('flipped');
+        }else{
+          $('#bt_scale').addClass('flipped');
+        }
     }hideTools(){
 
         this._rotate.visible = false;
         this._move.visible = false;
-        this._scaleUP.visible = false;
-        this._scaleDown.visible = false;
+
+        this._active = false;
     }
     addTools(){
       //clickableZone
@@ -84,32 +99,7 @@ export class Player {
           this._move.rotation.x = -Math.PI / 2;
           this.container.add(this._move);
          
- //scale tool
- this._scaleUP = new THREE.Mesh(
-  new THREE.BoxGeometry(0.2,0.2,0.3),
-  new THREE.MeshStandardMaterial({
-    color: 0xff0000,
-    opacity: 1,
-    side: THREE.DoubleSide, //will make the plane visible from top and bottom
-  })
-)
-this._scaleUP.position.set(1,1.4, 0);
-this._scaleUP.name = '_scaleUP';
-this.container.add(this._scaleUP);
-
-
-this._scaleDown= new THREE.Mesh(
-  new THREE.BoxGeometry(0.2,0.2,0.3),
-  new THREE.MeshStandardMaterial({
-    color: 0x00ff00,
-    opacity: 1,
-    side: THREE.DoubleSide, //will make the plane visible from top and bottom
-  })
-)
-this._scaleDown.position.set(1,0.6, 0);
-this._scaleDown.name = '_scaleDown';
-this.container.add(this._scaleDown);
-this._scaleDown.rotation.x = Math.PI;
+ 
           /*body cylinder
           this._move = new THREE.Mesh(
             new THREE.CylinderGeometry(
@@ -127,44 +117,69 @@ this._scaleDown.rotation.x = Math.PI;
     }
     addObj(){
         //load the object
-    
+
         new OBJLoader()
         .setPath('../assets/obj')
         .load(
           '/rp_mei_posed_001_30k.obj',
           (object) => {
-            this.container.add(object);
-            object.receiveShadow = true
-           // console.log(object)
-            let boundingBox = new THREE.Box3().setFromObject(object);
-            let height = Math.abs(boundingBox.min.y - boundingBox.max.y);
-           // console.log(height);
-            object.scale.setScalar( (1/height) *1.5)
-            object.position.set(0, 0.01, 0)
+            object.name ="rp_mei_posed_001_30k";
+           // console.log("loaded obj",object)
+
+           this.addLoadedObj(object);
           },
-          this.onProgress
+          this.onProgress,this.onError
         )
+    }
+    addLoadedObj(object:THREE.Group){
+      this.container.add(object);
+      object.receiveShadow = true
+     // console.log(object)
+      let boundingBox = new THREE.Box3().setFromObject(object);
+      let height = Math.abs(boundingBox.min.y - boundingBox.max.y);
+     // console.log(height);
+      object.scale.setScalar( (1/height) *1.5)
+      object.position.set(0, 0.01, 0);
+      $('#loaderImg').hide();
+      $('#objTool').show();
+   
+    }
+    onError(err: any){
+    console.log("error loading!",err)
     }
     onProgress(xhr: any) {
         if (xhr.lengthComputable) {
           const percentComplete = (xhr.loaded / xhr.total) * 100
-          console.log(percentComplete.toFixed(2) + '% downloaded')
+        //  console.log(percentComplete.toFixed(2) + '% downloaded')
         }
       }
 
     scaleObj(v:number){
-      if(!this.scaled){
-        this.CurrentScale += v;
+        this.CurrentScale += v*this.scaleValue();
         this.container.scale.setScalar(this.CurrentScale);
-        this.scaled = true;
-
-      }
     }
-    
+    scaleValue(){
+      let Direction:number = 1;
+      if(this.scaleCounter <= Tools_Options.maxScale){
+      Direction=1;
+      $('#bt_scale').removeClass('flipped');
+    }
+      else{
+        Direction=-1;
+        $('#bt_scale').addClass('flipped');
+      }
+      if(this.CurrentScale-0.1 <= Tools_Options.minScale){
+        this.scaleCounter = Tools_Options.minScale; 
+        Direction=1;
+        $('#bt_scale').removeClass('flipped');
+      }
+      this.scaleCounter+=0.1;
+      return Direction;
+    }
 
+    /** rmove from scene */
+    destroy(){
+      this.scene.remove(this.container);
+    }
 }
 
-/**To Do */
-//scaling tool
-//removing
-//flipping

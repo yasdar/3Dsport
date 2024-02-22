@@ -10,13 +10,13 @@ export class Terrain {
     this.AddTerrainMesh();
   }
   AddTerrainMesh(){
-    const geometry:THREE.BoxGeometry = new THREE.BoxGeometry(12, 0.2, 7) //12, 7, 0.2
+    const geometry:THREE.BoxGeometry = new THREE.BoxGeometry(12, 0.2, 12*0.6476) //12, 7, 0.2
     const textTureLoader = new THREE.TextureLoader()
     const materials = [
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
-      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/t2.jpeg') }),
-      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/t2.jpeg') }),
+      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/Saha0.png') }),
+      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/Saha0.png') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
     ]

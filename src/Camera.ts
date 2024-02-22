@@ -109,6 +109,9 @@ export class Camera {
     $('#bt_rotateACX').on('mouseout mouseup touchend', () => {
       this._rotateACX = false
     })
+
+    
+    
   }
   cameraAroundY() {
     //console.log(this.ToYaxe.angle)
