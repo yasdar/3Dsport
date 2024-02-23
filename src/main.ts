@@ -11,6 +11,7 @@ import { Player } from "./toolObjects/Player1";
 import { Megaphone } from "./toolObjects/Megaphone1";
 import { AngleBetweenTwoPointsInPlanXZ, distanceVector } from "./utils";
 import { Ball } from "./toolObjects/Ball1";
+import { BaseObj } from "./toolObjects/BaseObj";
 
 export class App
 {
@@ -224,6 +225,10 @@ export class App
       $('#test1').on('pointerdown', (event: any) => {
         this.addPlayer()
       })
+      //add an object
+      $('#test11').on('pointerdown', (event: any) => {
+        this.addPlayer2()
+      })
 
       $('#test2').on('pointerdown', (event: any) => {
         this.addObject1()
@@ -232,6 +237,12 @@ export class App
 
       $('#test3').on('pointerdown', (event: any) => {
         this.addObject2()
+      })
+      $('#test4').on('pointerdown', (event: any) => {
+        this.addObject4()
+      })
+      $('#test5').on('pointerdown', (event: any) => {
+        this.addObject3()
       })
 
       //object tool
@@ -277,7 +288,8 @@ export class App
     }
     private addObject1(){
       this.highlightSelected();
-      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length);
+
+      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/megaphone-001.obj',0.33);
       mp.container.position.z = Math.random()*2
       this.pickableObjects.push(mp._rotate);
       this.pickableObjects.push(mp._move);
@@ -291,7 +303,7 @@ export class App
 
     private addObject2(){
       this.highlightSelected();
-      const ba:Ball = new Ball(this.scene,0.2,this.addedObgetcs.length);
+      const ba:Ball = new Ball(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/Ball Football Nike orange N060122.obj',0.33);
       ba.container.position.z = Math.random()*2
       this.pickableObjects.push(ba._rotate);
       this.pickableObjects.push(ba._move);
@@ -302,10 +314,40 @@ export class App
         Action:''
       }
     }
+    private addObject3(){
+      this.highlightSelected();
+
+      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/equipment_0006_disc.glb',0.08);
+      mp.container.position.z = Math.random()*2
+      this.pickableObjects.push(mp._rotate);
+      this.pickableObjects.push(mp._move);
+      this.addedObgetcs.push(mp)
+
+      this.lastSelectedObject={
+        container:mp.container,
+        Action:''
+      }
+    }
+    private addObject4(){
+      this.highlightSelected();
+
+      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/sports-signage-001.fbx',1);
+      mp.container.position.z = Math.random()*2
+      this.pickableObjects.push(mp._rotate);
+      this.pickableObjects.push(mp._move);
+      this.addedObgetcs.push(mp)
+
+      this.lastSelectedObject={
+        container:mp.container,
+        Action:''
+      }
+    }
 
     private addPlayer() {
       this.highlightSelected();
-      const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length);
+      const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length,
+        '../assets/obj',
+        '/rp_mei_posed_001_30k.fbx',1);
       player.container.position.x = Math.random()*2
       this.pickableObjects.push(player.clickableZone);
       this.pickableObjects.push(player._rotate);
@@ -319,7 +361,24 @@ export class App
 //console.log('pickableObjects',this.pickableObjects)
 //console.log('addedObgetcs',this.addedObgetcs)
     }
+    private addPlayer2() {
+      this.highlightSelected();
+      const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length,
+        '../assets/obj',
+        '/uploads_files_2788856_char_Adam.fbx',17);
+      player.container.position.x = Math.random()*2
+      this.pickableObjects.push(player.clickableZone);
+      this.pickableObjects.push(player._rotate);
+      this.pickableObjects.push(player._move);
+      this.addedObgetcs.push(player);
 
+      this.lastSelectedObject={
+        container:player.container,
+        Action:''
+      }
+//console.log('pickableObjects',this.pickableObjects)
+//console.log('addedObgetcs',this.addedObgetcs)
+    }
     highlightSelected(){
       if(this.selectedObject.container){
         console.log(this.selectedObject.container.name)
@@ -341,9 +400,3 @@ $(function () {
   console.log('doc ready');
   new App();
 });
-
-
-/**To Do */
-//common class for player/ball/megaphone and extend it
-//change scene
-//diviser le panneau a gauche joueurs / equipments 
