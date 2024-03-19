@@ -73,14 +73,19 @@ export class BaseObj {
         new THREE.CylinderGeometry(
             0.33,
             0.33,
-            0.7
+            0.7,
+            6,
+            1
             ),
         new THREE.MeshStandardMaterial({
           color: 0xffffff,
           opacity: 0,
+          //wireframe:true,
           transparent:true
         })
       )
+     
+
         this.clickableZone.position.set(0, 1, 0);
         this.clickableZone.name = 'clickableZone';
         this.container.add(this.clickableZone);
@@ -101,16 +106,20 @@ export class BaseObj {
 
         //moving tool
         this._move = new THREE.Mesh(
-            new THREE.CircleGeometry(0.33),
+            new THREE.CircleGeometry(0.33,6),
             new THREE.MeshStandardMaterial({
-              color: 0xffffff,
+              color: 0xff0000,
               opacity: 1,
             })
           )
+          
           this._move.position.set(0,0.01, 0);
           this._move.name = '_move';
           this._move.rotation.x = -Math.PI / 2;
           this.container.add(this._move);
+
+
+        
     }
     addObj(){
         //load the object
@@ -162,13 +171,14 @@ export class BaseObj {
     addLoadedObj(object:THREE.Group){
       this._currentOBj = object;
       this.container.add(object);
+
       object.receiveShadow = true
      // console.log(object)
       let boundingBox = new THREE.Box3().setFromObject(object);
       let height = Math.abs(boundingBox.min.y - boundingBox.max.y);
      // console.log(height);
       object.scale.setScalar( (1/height) *1.5*this._scaleFactor)
-      object.position.set(0, 0.01, 0);
+     // object.position.set(0, 0.01, 0);
       $('#loaderImg').hide();
       $('#objTool').show();
     

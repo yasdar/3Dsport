@@ -1,4 +1,7 @@
 import $ from "jquery";
+import * as dat from "dat.gui";
+import * as skelotonUtils from "three/examples/jsm/utils/SkeletonUtils"
+
 //import gsap from "gsap";
 //import { GameState } from "./config";
 
@@ -15,7 +18,7 @@ import { BaseObj } from "./toolObjects/BaseObj";
 
 export class App
 {
-   
+   public gui:dat.GUI
     private scene: Scene;
     private renderer: WebGLRenderer;
     public terrain:Terrain;
@@ -74,6 +77,25 @@ export class App
 
         //looping
         this.animate();
+
+
+        this.gui = new dat.GUI();
+        const _options={
+          color:0xffffff,
+          wireframe:false
+        }
+        
+        this.gui.addColor(_options,"color").onChange((v)=>{
+          console.log("v",v);
+    this.addedObgetcs[this.addedObgetcs.length-1]._move.material.color.set(v)
+        });
+
+        this.gui.add(_options,"wireframe").onChange((v)=>{
+          console.log("v",v);
+          this.addedObgetcs[this.addedObgetcs.length-1]._move.material.wireframe=v;
+        });
+
+
     }
 
     private onWindowResize(): void
@@ -192,8 +214,8 @@ export class App
       directionalLight.position.set(0, 7, 2)
       this.scene.add(directionalLight)
       directionalLight.shadow.camera.bottom = -4
-     // this.scene.add(new THREE.DirectionalLightHelper(directionalLight))
-      //this.engine.scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
+      //this.scene.add(new THREE.DirectionalLightHelper(directionalLight))
+      //this.scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
     }
     private addToolEvents(){
       this.mousePosition = new THREE.Vector2();
@@ -353,6 +375,17 @@ export class App
       this.pickableObjects.push(player._rotate);
       this.pickableObjects.push(player._move);
       this.addedObgetcs.push(player);
+
+
+     /* setTimeout(() => {
+        let objClone:any = skelotonUtils.clone(player._currentOBj);
+        this.scene.add(objClone);
+      }, 3000);*/
+
+      
+
+
+
 
       this.lastSelectedObject={
         container:player.container,

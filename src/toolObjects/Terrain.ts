@@ -16,7 +16,7 @@ export class Terrain {
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/Saha0.png') }),
-      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/Saha0.png') }),
+      new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
       new THREE.MeshBasicMaterial({ map: textTureLoader.load('../assets/images/land.jpeg') }),
     ]

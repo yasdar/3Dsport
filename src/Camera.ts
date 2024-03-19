@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import $ from "jquery";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 export class Camera {
   _camera: THREE.PerspectiveCamera;
   controls:OrbitControls
@@ -22,7 +23,7 @@ export class Camera {
         75,
         window.innerWidth / window.innerHeight,
         0.1, //Near
-        1000 //Far
+        100 //Far
       )
       this._camera.position.set(0, 6, 8)
       this.controls = new OrbitControls(this._camera, renderer.domElement)
@@ -31,6 +32,7 @@ export class Camera {
           MIDDLE: undefined,
           RIGHT: undefined,
         }
+        this.controls.enablePan = false;//diseable the ctrl/shift+mouse
         //vertical rotation
         this.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 40
         //zoom
