@@ -1,11 +1,14 @@
 import * as THREE from 'three'
+import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+
 import  { Tools_Options } from '../config';
 import $ from "jquery";
 export class BaseObj {
-
+  mixer:THREE.AnimationMixer;
     container:THREE.Object3D;
     clickableZone : THREE.Mesh;
     _rotate!: THREE.Mesh;
@@ -45,7 +48,7 @@ export class BaseObj {
 
     $('#bt_scale').removeClass('flipped');
     $('#objTool').hide();
-    $('#loaderImg').show();
+    //$('#loaderImg').show();
     
     }showTools(){
 
@@ -85,7 +88,7 @@ export class BaseObj {
         })
       )
      
-
+      
         this.clickableZone.position.set(0, 1, 0);
         this.clickableZone.name = 'clickableZone';
         this.container.add(this.clickableZone);
@@ -100,7 +103,7 @@ export class BaseObj {
         })
         this._rotate = new THREE.Mesh(new THREE.CircleGeometry(0.75), circleMat);
         this._rotate.rotation.x = -Math.PI / 2;
-        this._rotate.position.set(0, 0, 0);
+        this._rotate.position.set(0, 0.01, 0);
         this._rotate.name = '_rotate';
         this.container.add(this._rotate);
 
@@ -113,7 +116,7 @@ export class BaseObj {
             })
           )
           
-          this._move.position.set(0,0.01, 0);
+          this._move.position.set(0,0.02, 0);
           this._move.name = '_move';
           this._move.rotation.x = -Math.PI / 2;
           this.container.add(this._move);
@@ -137,16 +140,18 @@ export class BaseObj {
               this.onProgress,this.onError
             )
         }
-        else if(this._pathOBJ.indexOf('.glb') != -1){
+        else if(this._pathOBJ.indexOf('.glb') != -1 || this._pathOBJ.indexOf('.gltf') != -1){
             new GLTFLoader()
             .setPath(this._path)//'../assets/obj'
             .load(
                 this._pathOBJ,//'/rp_mei_posed_001_30k.obj'
               (object) => {
                 object.scene.name = this._pathOBJ;
-               // console.log("loaded obj",object)
-    
+               // object.scene.castShadow = true;
+                console.log("loaded .glb or .gltf",object)
+                this._currentOBj = object;
                this.addLoadedObj(object.scene);
+              this.checkNodes(object);
               },
               this.onProgress,this.onError
             )
@@ -158,28 +163,49 @@ export class BaseObj {
                 this._pathOBJ,//'/rp_mei_posed_001_30k.obj'
               (object) => {
                 object.name = this._pathOBJ;
-               // console.log("loaded obj",object)
+
+                const model = object;
+                console.log("loaded .fbx",model)
+
     
                this.addLoadedObj(object);
               },
               this.onProgress,this.onError
             )
+        }else{
+          new MTLLoader()
+					.setPath( this._path)
+					.load( this._pathOBJ,  ( materials )=> {
+
+						materials.preload();
+
+						new OBJLoader()
+							.setMaterials( materials )
+							.setPath( this._path )
+							.load( this._pathOBJ.replace('.mtl','.obj'),  ( object )=> {
+
+                this.addLoadedObj(object);
+
+
+							}, this.onProgress,this.onError );
+
+					} );
         }
+
 
         //GLTFLoader
     }
     addLoadedObj(object:THREE.Group){
-      this._currentOBj = object;
+      
       this.container.add(object);
-
-      object.receiveShadow = true
+      
      // console.log(object)
       let boundingBox = new THREE.Box3().setFromObject(object);
       let height = Math.abs(boundingBox.min.y - boundingBox.max.y);
      // console.log(height);
       object.scale.setScalar( (1/height) *1.5*this._scaleFactor)
      // object.position.set(0, 0.01, 0);
-      $('#loaderImg').hide();
+      //$('#loaderImg').hide();
       $('#objTool').show();
     
       
@@ -221,5 +247,39 @@ export class BaseObj {
     destroy(){
       this.scene.remove(this.container);
     }
+
+
+    checkNodes(obj:any){
+        /*
+        //console.log("@",obj);
+        this.mixer = new THREE.AnimationMixer(obj.scene)
+        const clips = obj.animations;
+        const clip = THREE.AnimationClip.findByName(clips,'player16');
+        console.log("clip",clip);
+       const action = this.mixer.clipAction(clip);
+       // console.log("action",action);
+        action.play();
+        action.repetitions = 0;*/
+
+
+      //just apply shadow
+      let model = obj.scene;
+      model.traverse((node:any) =>{
+        if (node.isMesh) {
+          //add shadow
+          node.castShadow = true;
+      }
+      });
+
+
+
+    }
+
+
+ 
+    update(){
+      if(this.mixer){this.mixer.update(new THREE.Clock().getDelta());}
+    }
+
 }
 

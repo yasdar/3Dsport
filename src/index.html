@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"> <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="css/style.css">
     <script src='./js/bootstrap.bundle.min.js'></script>
-    
+
+
+
     <script src='main.js'></script>
 </head>
 <body>
@@ -29,31 +31,36 @@
         </div>
       </div>
       <div class="d-flex justify-content-end col-6 m-0 ps-2" >
-        <div id="objTool">
-          <img id="loaderImg"  class="clickable" src="./assets/images/loader.png" />
+        <div id="objTool" style="height: 32px;">
+          <img id="loaderImg" style="display: none;" class="clickable" src="./assets/images/loader.png" />
           <img id="bt_trash" class="clickable" src="./assets/images/trash.png" />
           <img id="bt_scale" class="clickable" src="./assets/images/scale.png" />
-          <img id="bt_flip" class="clickable" src="./assets/images/flip.png" />
+          <img id="bt_flip"  class="clickable" src="./assets/images/flip.png" />
+        <!-- <img id="bt_paint" class="clickable" src="./assets/images/paint.png"/>-->
+         <input type="text" data-coloris style="width: 94px;">
         </div>
       </div>
     </div>
       <!-- right tools-->
-      <div class="rightTools">
-        <div class="clickable">
-          <img id="test1" style="max-width: 48px; height: auto;" src="./assets/images/test1.png" />
-          <img id="test11" style="max-width: 48px; height: auto;" src="./assets/images/test11.png" />
-          <div class="line"></div>
-          <img id="test2" style="max-width: 48px; height: auto;" src="./assets/images/megaphone-001-poster.png" />
-          <img id="test3" style="max-width: 48px; height: auto; margin-top: 16px;" src="./assets/images/001-football.png" />
-          <img id="test4" style="max-width: 48px; height: auto; margin-top: 16px;" src="./assets/images/sports-signage-001-poster.png" />
-          <img id="test5" style="max-width: 48px; height: auto; margin-top: 16px;" src="./assets/images/002-cone.png" />
-        </div>
+      <div class="rightButtons">
+      <div id='EquipmentsBt' class="divTitle nonSelectedBt">
+        <img src="./assets/images/002-cone.png">
+        <p class="title">Equipments</p>
+      </div>
+      <div id='PitchesBt' class="divTitle nonSelectedBt">
+        <img src="./assets/images/007-field.png">
+        <p class="title">Pitches</p>
+      </div>
+    </div>
+      <div id="equipments" class="rightTools">
+      <div id="equipmentsC" class="row" style="width: 100%; height: 100%;"></div>
       </div>
 
+      <div id="pitches" class="rightTools">
+        <div id="pitchesC" class="" style="width: 100%; height: 100%;"></div>
+        </div>
 
-
-    </div>
-        
+    </div> 
 </body>
 </html>
 

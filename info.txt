@@ -1,1 +1,4 @@
 ../assets   -->  ./assets
+
+
+node src/assets/obj/equipmentsFootBall/obj/list.js

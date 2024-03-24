@@ -1,7 +1,8 @@
 import $ from "jquery";
 import * as dat from "dat.gui";
 import * as skelotonUtils from "three/examples/jsm/utils/SkeletonUtils"
-
+import "@melloware/coloris/dist/coloris.css";
+import Coloris from "@melloware/coloris";
 //import gsap from "gsap";
 //import { GameState } from "./config";
 
@@ -15,10 +16,12 @@ import { Megaphone } from "./toolObjects/Megaphone1";
 import { AngleBetweenTwoPointsInPlanXZ, distanceVector } from "./utils";
 import { Ball } from "./toolObjects/Ball1";
 import { BaseObj } from "./toolObjects/BaseObj";
+import { eqipments_Football_path, equipments_Football } from "./config";
+import { ActivateRightBt, addEList, addPitcheList } from "./UI";
 
 export class App
 {
-   public gui:dat.GUI
+    public gui:dat.GUI
     private scene: Scene;
     private renderer: WebGLRenderer;
     public terrain:Terrain;
@@ -30,6 +33,7 @@ export class App
     addedObgetcs:Array<any> = [];
 
     onDown:boolean = false;
+    selectedColor:string = '';
     selectedObject:{
       container:THREE.Object3D|null,
       Action:string
@@ -46,7 +50,8 @@ export class App
         this.renderer.setClearColor(0xff0000, 1); 
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         //add to web page
         const _div:HTMLElement|null =  document.getElementById('app');
         if(_div)
@@ -96,8 +101,73 @@ export class App
         });
 
 
-    }
 
+        //create Equipment list
+        addEList();
+
+        addPitcheList();
+         //listen to add equipment event
+        for(let line:number = 0 ; line<equipments_Football.length; line++){
+        $('#E_'+line).on('pointerdown',()=>{
+         this.addEquipment(line);
+        });
+        }
+
+
+ //colorpicker
+Coloris.init();
+Coloris.coloris({
+  el: "#coloris",
+  themeMode: 'dark',
+  alpha: false,
+  margin: 20,
+  closeButton: true,
+  closeLabel: 'OK',
+  clearButton: true,
+  clearLabel: 'Clear',
+  onChange: (color:any) =>{this.selectedColor = color}
+});
+
+
+document.addEventListener('close', event => {
+  this.applyColor();
+});
+
+
+}
+private applyColor(){
+ 
+  if(this.selectedColor.length<1){return;}
+  console.log("applyColor",this.selectedColor);
+  if (this.lastSelectedObject.container &&  this.lastSelectedObject.container.userData.Me._active){
+      //get object
+    let model = this.lastSelectedObject.container.userData.Me._currentOBj.scene;
+    //color as number
+    let n_color:any = this.selectedColor.replace('#','0x');
+    //apply color
+      model.traverse((node:any) =>{
+        if (node.isMesh) {
+          console.log("Mesh",node.name)
+          if( 
+            node.name != 'flag' &&
+            node.name != 'hole'&&
+            node.name != 'steps'&&
+            node.name != 'pole2'&&
+            node.name != 'net'&&
+            node.name != 'goal_2'
+            ){
+            node.material.color.setHex(n_color);
+          }
+          if( node.name.indexOf('football')!=-1 ){
+           
+            node.material.color.setHex(n_color);
+            
+            
+          }
+      }
+      });
+  }
+}
     private onWindowResize(): void
     {
         this.camera._camera.aspect = window.innerWidth / window.innerHeight;
@@ -114,6 +184,9 @@ export class App
         this.renderer.render(this.scene, this.camera._camera);
     }
     private update(){
+      this.addedObgetcs.forEach((obg:BaseObj)=>{
+        obg.update();
+      })
       this.ray_caster.setFromCamera(this.mousePosition,this.camera._camera);
       const intersetcs = this.ray_caster.intersectObjects(this.pickableObjects);
       //pointerclick on rotate or move tools of an object
@@ -208,14 +281,16 @@ export class App
       this.scene.add(gridHelper)
     }
     private addLight(){
-      this.scene.add(new THREE.AmbientLight(0x3333))
-      let directionalLight = new THREE.DirectionalLight(0xffffff)
+      this.scene.add(new THREE.AmbientLight(0xffffff,1.5))
+      let directionalLight = new THREE.DirectionalLight(0xffffff,1.5)
       directionalLight.castShadow = true
-      directionalLight.position.set(0, 7, 2)
+      directionalLight.position.set(0, 4, 4);
+      directionalLight.target.position.set(0, 0, 0);
       this.scene.add(directionalLight)
-      directionalLight.shadow.camera.bottom = -4
+      //directionalLight.shadow.camera.bottom = -4
       //this.scene.add(new THREE.DirectionalLightHelper(directionalLight))
       //this.scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
+   
     }
     private addToolEvents(){
       this.mousePosition = new THREE.Vector2();
@@ -223,11 +298,9 @@ export class App
       $('#app').on('pointermove', (event:any) => {
         this.mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1
         this.mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1
-        //console.log('pointermove')
       })
   
       $('#app').on('pointerdown', (event: any) => {
-       // console.log('pointerdown')
         this.mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
         this.onDown = true;
@@ -241,31 +314,6 @@ export class App
         this.selectedObject= {container:null,Action:"0"};
       })
 
-
-
-      //add an object
-      $('#test1').on('pointerdown', (event: any) => {
-        this.addPlayer()
-      })
-      //add an object
-      $('#test11').on('pointerdown', (event: any) => {
-        this.addPlayer2()
-      })
-
-      $('#test2').on('pointerdown', (event: any) => {
-        this.addObject1()
-      })
-
-
-      $('#test3').on('pointerdown', (event: any) => {
-        this.addObject2()
-      })
-      $('#test4').on('pointerdown', (event: any) => {
-        this.addObject4()
-      })
-      $('#test5').on('pointerdown', (event: any) => {
-        this.addObject3()
-      })
 
       //object tool
       $('#bt_scale').on('pointerdown', (event: any) => {
@@ -305,60 +353,35 @@ export class App
            this.highlightSelected();
           }
           });
-        
 
+          //Must
+          $('.bottomTools').on('pointerdown', (event: any) => {
+            console.log('ok .bottomTools')
+            event.stopPropagation();
+          });
+           //Must
+           $('.rightTools').on('pointerdown', (event: any) => {
+            console.log('ok .rightTools')
+            event.stopPropagation();
+          });
+
+
+          ActivateRightBt();
     }
-    private addObject1(){
+    private addEquipment(id:number){
+      console.log( equipments_Football[id].pathObj)
       this.highlightSelected();
-
-      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/megaphone-001.obj',0.33);
+      const mp:BaseObj = new BaseObj(
+        this.scene,
+        0.12,
+        this.addedObgetcs.length,
+        eqipments_Football_path,
+        equipments_Football[id].pathObj,
+        equipments_Football[id].SC);
       mp.container.position.z = Math.random()*2
       this.pickableObjects.push(mp._rotate);
       this.pickableObjects.push(mp._move);
       this.addedObgetcs.push(mp)
-
-      this.lastSelectedObject={
-        container:mp.container,
-        Action:''
-      }
-    }
-
-    private addObject2(){
-      this.highlightSelected();
-      const ba:Ball = new Ball(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/Ball Football Nike orange N060122.obj',0.33);
-      ba.container.position.z = Math.random()*2
-      this.pickableObjects.push(ba._rotate);
-      this.pickableObjects.push(ba._move);
-      this.addedObgetcs.push(ba)
-
-      this.lastSelectedObject={
-        container:ba.container,
-        Action:''
-      }
-    }
-    private addObject3(){
-      this.highlightSelected();
-
-      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/equipment_0006_disc.glb',0.08);
-      mp.container.position.z = Math.random()*2
-      this.pickableObjects.push(mp._rotate);
-      this.pickableObjects.push(mp._move);
-      this.addedObgetcs.push(mp)
-
-      this.lastSelectedObject={
-        container:mp.container,
-        Action:''
-      }
-    }
-    private addObject4(){
-      this.highlightSelected();
-
-      const mp:Megaphone = new Megaphone(this.scene,0.2,this.addedObgetcs.length,'../assets/obj','/sports-signage-001.fbx',1);
-      mp.container.position.z = Math.random()*2
-      this.pickableObjects.push(mp._rotate);
-      this.pickableObjects.push(mp._move);
-      this.addedObgetcs.push(mp)
-
       this.lastSelectedObject={
         container:mp.container,
         Action:''
@@ -369,7 +392,7 @@ export class App
       this.highlightSelected();
       const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length,
         '../assets/obj',
-        '/rp_mei_posed_001_30k.fbx',1);
+        '/char.gltf',1);//rp_mei_posed_001_30k.fbx
       player.container.position.x = Math.random()*2
       this.pickableObjects.push(player.clickableZone);
       this.pickableObjects.push(player._rotate);
@@ -430,6 +453,8 @@ export class App
 
 
 $(function () {
-  console.log('doc ready');
-  new App();
+   new App();
+
+
+   
 });

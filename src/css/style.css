@@ -29,14 +29,54 @@ body {
   }
   .rightTools {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 128px;
-    height: calc(100% - 50px);
+    left: -10%;
+    top: 2px;
+    width: 10%;
+    height: calc(100% - 52px);
     background-color: rgba(128, 128, 128, 0.5);
     border: 2px solid grey;
     border-radius: 8px;
     padding: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+  }
+  .rightButtons{
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    padding-left: 2px;
+    padding-top: 2px;
+  }
+  .divTitle{
+    margin-top: 2px;
+    display: flex;
+    cursor: pointer;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    width: 36px;
+    border-radius: 5px;
+    background-color: black;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  .divTitle img{
+    max-width: 24px;
+    margin-left: 6px;
+  }
+  .selectedBt{
+    border: 2px solid yellow ;
+  }
+  .nonSelectedBt{
+    border: 2px solid grey ;
+  }
+  .title{
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    margin-left: 6px;
   }
   .bottomTools {
     position: absolute;
@@ -60,10 +100,8 @@ body {
   }
   .clickable{
     cursor: pointer;
-    max-height:32px;
-    width: auto;
-    margin-left: 2px;
-    margin-right: 2px;
+    max-width: 100%;
+    max-height: 100%;
   }
   .flipped {
     transform: scale(1, -1);
@@ -92,3 +130,25 @@ body {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
+
+
+
+#equipmentsC , #pitchesC{
+margin-left: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
