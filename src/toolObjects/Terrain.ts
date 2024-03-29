@@ -5,6 +5,7 @@ import { pitchesTextures } from '../config';
 export class Terrain {
  _scene:THREE.Scene;
  _terrainMesh0:THREE.Mesh;
+ _terrainMesh01:THREE.Mesh;
  _terrainMesh:THREE.Mesh;
  terrainLimits:any;
 
@@ -13,6 +14,7 @@ export class Terrain {
  tracageOBJ:string = '/pitchmarks_0001_standard.glb';
  _currentOBj:any;
  _scaleFactor:number = 0.01;
+ CurrentTextureIndex:number = 0;
   constructor(scene:THREE.Scene) {
     this._scene  = scene;
 
@@ -22,30 +24,33 @@ export class Terrain {
     const textTureLoader = new THREE.TextureLoader()
     //pitche background0
     const geometry0:THREE.BoxGeometry = new THREE.BoxGeometry(14, 0.2, 7.5)
-    const matirail0 = [
-      new THREE.MeshStandardMaterial({ color:0xffffff }),
-      new THREE.MeshStandardMaterial({ color:0xffffff }),
-      new THREE.MeshStandardMaterial({ color:0x00ff00}),
-      new THREE.MeshStandardMaterial({ color:0xffffff }),
-      new THREE.MeshStandardMaterial({ color:0xffffff }),
-      new THREE.MeshStandardMaterial({ color:0xffffff }),
-    ]
-    this._terrainMesh0 = new THREE.Mesh(geometry0, matirail0);
+    this._terrainMesh0 = new THREE.Mesh(geometry0, new THREE.MeshStandardMaterial({ color:0x00ff00,transparent:false }));
     this._terrainMesh0.position.set(0,0,0)
     this._scene.add( this._terrainMesh0);
 
+    const geometry01:THREE.BoxGeometry = new THREE.BoxGeometry(12, 0.1, 6.5)
+    this._terrainMesh01 = new THREE.Mesh(geometry01,  new THREE.MeshStandardMaterial({ color:0x00ff00,transparent:false }));
+    this._terrainMesh01.position.set(0, 0.1, 0)
+    this._scene.add( this._terrainMesh01);
+
+    this._terrainMesh01.receiveShadow = true;
+    this._terrainMesh01.castShadow = true;
+
+
     const geometry1:THREE.BoxGeometry = new THREE.BoxGeometry(14, 0, 7.5) //12, 7, 0.2
-    const material1 =new THREE.MeshStandardMaterial({ color:0x00ff00,transparent:true});
+    const material1 =new THREE.MeshStandardMaterial({ 
+      color:0x0c753f,
+      transparent:true,
+      opacity:pitchesTextures[this.CurrentTextureIndex].opacity,
+      map : textTureLoader.load(pitchesTextures[this.CurrentTextureIndex].texture)});
     this._terrainMesh = new THREE.Mesh(geometry1, material1);
-    this._terrainMesh.position.set(0,0.11,0)
+    this._terrainMesh.position.set(0,0.16,0)
+    
     
    
    
     this._terrainMesh.name ='terrain'
     this._scene.add( this._terrainMesh);
-
-    this._terrainMesh.receiveShadow = true;
-    this._terrainMesh.castShadow = true;
 
     this.terrainLimits={
       left:-geometry1.parameters.width/2,
@@ -72,18 +77,6 @@ export class Terrain {
       },
       this.onProgress,this.onError
     )
-
-
-
-
-   /*this.setPitcheTexture(pitchesTextures[1]);//chnane pitche textures
-   this.setPitcheBorderColor(0xff0000);//change the entire color
-   setTimeout(() => {
-    this.setTracageColor(0x000000)
-   }, 2000); */
-
-
-
   } onProgress(xhr: any) {
     if (xhr.lengthComputable) {
       const percentComplete = (xhr.loaded / xhr.total) * 100
@@ -100,13 +93,22 @@ export class Terrain {
 
     // console.log(height);
      object.scale.setScalar(12/width);
-     object.position.set(0, 0.12, 0);
+     object.position.set(0, 0.18, 0);
      this._scene.add( object);
   }
   setPitcheBorderColor(color:number){
+    console.log("setPitcheBorderColor",color)
     this._terrainMesh0.traverse((node:any) =>{
       if (node.isMesh) {
-          node.material[2].color.setHex(color);
+          node.material.color.setHex(color);
+    }
+    });
+  }
+  setpitchColor(color:number){
+    console.log("setpitchColor",color)
+    this._terrainMesh01.traverse((node:any) =>{
+      if (node.isMesh) {
+          node.material.color.setHex(color);
     }
     });
   }
@@ -114,17 +116,21 @@ export class Terrain {
     if( ! this._currentOBj ){return;}
     this._currentOBj.scene.traverse((node:any) =>{
       if (node.isMesh) {
+        console.log("setTracageColor",color)
           node.material.color.setHex(color);
     }
     });
   }
 
-  setPitcheTexture(data:any){
+  setPitcheTexture(index:number){
+
+    this.CurrentTextureIndex = index;
+    
     const textTureLoader = new THREE.TextureLoader()
     this._terrainMesh.traverse((node:any) =>{
       if (node.isMesh) {
-          node.material.map = textTureLoader.load(data.texture);
-          node.material.opacity = data.opacity;
+          node.material.map = textTureLoader.load(pitchesTextures[index].texture);
+          node.material.opacity = pitchesTextures[index].opacity;
           node.material.map.flipY = false;
         }
     });

@@ -1,0 +1,120 @@
+# Blender 3.6.2 MTL File: 'Celebration 3.blend'
+# www.blender.org
+
+newmtl Bottom_Socks_FRONT_1951
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Bottom_Socks_FRONT_1923_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Bottom_Socks_FRONT_1923_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Bottom_Socks_FRONT_1923_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Bottom_Socks_FRONT_1923_Normal_OpenGL.png
+
+newmtl Collar_FRONT_1926
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Collar_FRONT_1918_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Collar_FRONT_1918_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Collar_FRONT_1918_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Collar_FRONT_1918_Normal_OpenGL.png
+
+newmtl Lower_Shirt_FRONT_1936
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Lower_Shirt_FRONT_1928_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Lower_Shirt_FRONT_1928_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Lower_Shirt_FRONT_1928_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Lower_Shirt_FRONT_1928_Normal_OpenGL.png
+
+newmtl Model
+Ns 28.763235
+Ka 1.000000 1.000000 1.000000
+Kd 0.435294 0.435294 0.435294
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Shirt_FRONT_1911
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shirt_FRONT_1913_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shirt_FRONT_1913_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shirt_FRONT_1913_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shirt_FRONT_1913_Normal_OpenGL.png
+
+newmtl Short_FRONT_1921
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Short_FRONT_1913_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Short_FRONT_1913_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Short_FRONT_1913_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Short_FRONT_1913_Normal_OpenGL.png
+
+newmtl Shoulder_FRONT_1931
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shoulder_FRONT_1923_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shoulder_FRONT_1923_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shoulder_FRONT_1923_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Shirt/4k/Shoulder_FRONT_1923_Normal_OpenGL.png
+
+newmtl Socks_FRONT_1916
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Socks_FRONT_1913_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Socks_FRONT_1913_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Socks_FRONT_1913_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Socks_FRONT_1913_Normal_OpenGL.png
+
+newmtl Upper_Socks_FRONT_1946
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Upper_Socks_FRONT_1918_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Upper_Socks_FRONT_1918_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Upper_Socks_FRONT_1918_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Socks/4k/Upper_Socks_FRONT_1918_Normal_OpenGL.png
+
+newmtl Waist_FRONT_1941
+Ka 1.000000 1.000000 1.000000
+Ks 0.075000 0.075000 0.075000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Waist_FRONT_1918_Base_color.png
+map_Ns C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Waist_FRONT_1918_Roughness.png
+map_refl C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Waist_FRONT_1918_Metallic.png
+map_Bump -bm 1.000000 C:/Users/omars/OneDrive/Desktop/Palestine/Texture/Short/4k/Waist_FRONT_1918_Normal_OpenGL.png

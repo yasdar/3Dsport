@@ -12,16 +12,15 @@ import THREE, { PerspectiveCamera, Scene, WebGLRenderer,Mesh } from "three";
 import { Terrain } from "./toolObjects/Terrain";
 import { Camera } from "./Camera";
 import { Player } from "./toolObjects/Player1";
-import { Megaphone } from "./toolObjects/Megaphone1";
 import { AngleBetweenTwoPointsInPlanXZ, distanceVector } from "./utils";
-import { Ball } from "./toolObjects/Ball1";
 import { BaseObj } from "./toolObjects/BaseObj";
-import { eqipments_Football_path, equipments_Football } from "./config";
-import { ActivateRightBt, addEList, addPitcheList } from "./UI";
+import { bgs_data, eqipments_Football_path, equipments_Football, pitchesTextures, players_data, players_path } from "./config";
+import { ActivateRightBt, addBgsList, addEList, addPitcheList, addPlayersList, handleBgsselection, handlePitcheselection, handlePlayersselection } from "./UI";
 
 export class App
 {
     public gui:dat.GUI
+    private canExport:boolean = true;
     private scene: Scene;
     private renderer: WebGLRenderer;
     public terrain:Terrain;
@@ -34,6 +33,17 @@ export class App
 
     onDown:boolean = false;
     selectedColor:string = '';
+    selectedColorPitch:string='';
+    selectedColorPlayer1:any={
+      Shirt:'0xff0000',
+      Shoulder:'0xfff000',
+      Short:'0x0fff00',
+      Socks:'0xfff000',
+      SocksTop:'0x00ff00',
+      SKin:'0xffdbac'
+    };
+    selectedColorPitchBorder:string='';
+    selectedColorPitchLine:string='';
     selectedObject:{
       container:THREE.Object3D|null,
       Action:string
@@ -46,7 +56,7 @@ export class App
     constructor()
     {
       //renderer
-        this.renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
         this.renderer.setClearColor(0xff0000, 1); 
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -62,6 +72,7 @@ export class App
         const Bcolor = new THREE.Color(0x000000);
         this.scene.background = Bcolor
 
+        this.setSceneBackground(bgs_data[0].url);
         //this.showAxes();
         this.camera = new Camera(this.renderer);
 
@@ -83,7 +94,7 @@ export class App
         //looping
         this.animate();
 
-
+/*
         this.gui = new dat.GUI();
         const _options={
           color:0xffffff,
@@ -98,76 +109,271 @@ export class App
         this.gui.add(_options,"wireframe").onChange((v)=>{
           console.log("v",v);
           this.addedObgetcs[this.addedObgetcs.length-1]._move.material.wireframe=v;
-        });
+        });*/
 
 
 
         //create Equipment list
         addEList();
-
-        addPitcheList();
-         //listen to add equipment event
-        for(let line:number = 0 ; line<equipments_Football.length; line++){
+      //listen to add equipment event
+      for(let line:number = 0 ; line<equipments_Football.length; line++){
         $('#E_'+line).on('pointerdown',()=>{
-         this.addEquipment(line);
+        this.addEquipment(line,null);
         });
         }
 
+        addPitcheList();
 
- //colorpicker
+        //listen to add pitch event
+        for(let p:number = 0 ; p<pitchesTextures.length; p++){
+          $('#P_'+p).on('pointerdown',()=>{
+           this.ApplyTerrainTexture(p);
+          });
+          }
+         // apply default terrain textures
+         this.ApplyTerrainTexture(0);
+
+          //listen to player events
+         addPlayersList();
+         //listen to add pitch event
+        for(let p:number = 0 ; p<players_data.length; p++){
+          $('#PL_'+p).on('pointerdown',()=>{
+            handlePlayersselection(p)
+            this.addPlayer(p,null);
+          });
+          }
+
+        addBgsList();
+          //listen bg selection event
+          for(let b:number = 0 ; b<bgs_data.length; b++){
+            $('#bg_'+b).on('pointerdown',()=>{
+              handleBgsselection(b)
+              this.setSceneBackground(bgs_data[b].url);
+            });
+            }
+       
+
+
+
+
+
+
+
+      this.addColoris();
+    
+
+
+
+
+}
+setSceneBackground(imgUrl:string){
+  if( !this.canExport ){return;}
+
+  this.canExport = false
+  var img = new Image();
+  img.src = imgUrl;
+  img.onload =  ()=> {
+    this.scene.background = new THREE.TextureLoader().load(img.src);
+  };
+
+  setTimeout(() => {this.canExport = true;}, 3000);
+
+}
+private addColoris(){
+  
 Coloris.init();
-Coloris.coloris({
-  el: "#coloris",
-  themeMode: 'dark',
-  alpha: false,
-  margin: 20,
+Coloris.coloris({el: "#coloris",themeMode: 'dark',alpha: false,margin: 20});
+
+document.addEventListener('close', event => {
+  //console.log("close:",event.target)
+  let c1:any = document.getElementsByClassName("coloris instance1")[0];
+  let c2:any = document.getElementsByClassName("coloris instance2")[0];
+  let c3:any = document.getElementsByClassName("coloris instance3")[0];
+  let c4:any = document.getElementsByClassName("coloris instance4")[0];
+  let c5:any = document.getElementsByClassName("coloris instance5")[0];
+  let c6:any = document.getElementsByClassName("coloris instance6")[0];
+  let c7:any = document.getElementsByClassName("coloris instance7")[0];
+  let c8:any = document.getElementsByClassName("coloris instance8")[0];
+  let c9:any = document.getElementsByClassName("coloris instance9")[0];
+  let c10:any = document.getElementsByClassName("coloris instance10")[0];
+
+ if(event.target ==  c1){this.applyColor();}
+ else if(event.target ==  c2){
+  let n_color:any = this.selectedColorPitchBorder.replace('#','0x');
+  this.terrain.setPitcheBorderColor(n_color );
+ }
+ else if(event.target ==  c3){
+  let n_color:any = this.selectedColorPitchLine.replace('#','0x');
+  this.terrain.setTracageColor(n_color );
+ }
+ else if(event.target ==  c4){
+  let n_color:any = this.selectedColorPitch.replace('#','0x');
+  this.terrain.setpitchColor(n_color );
+ }
+ else if(event.target ==  c5){
+  let n_color:any = this.selectedColorPlayer1.Shirt.replace('#','0x');
+  this.applyPlayerColors(["Shirt","Collar"],n_color);
+  $("#Shirt").css("border-color", this.selectedColorPlayer1.Shirt);
+ }
+ else if(event.target ==  c6){
+  let n_color:any = this.selectedColorPlayer1.Shoulder.replace('#','0x');
+  this.applyPlayerColors(["Shoulder"],n_color);
+  $("#Shoulder").css("border-color", this.selectedColorPlayer1.Shoulder);
+ }
+ else if(event.target ==  c7){
+  let n_color:any = this.selectedColorPlayer1.Short.replace('#','0x');
+  this.applyPlayerColors(["Short"],n_color);
+  $("#Short").css("border-color", this.selectedColorPlayer1.Short);
+ }
+ else if(event.target ==  c8){
+  let n_color:any = this.selectedColorPlayer1.Socks.replace('#','0x');
+  this.applyPlayerColors(["Socks","Bottom_Socks"],n_color);
+  $("#Socks").css("border-color", this.selectedColorPlayer1.Socks);
+ }
+ else if(event.target ==  c9){
+  let n_color:any = this.selectedColorPlayer1.SocksTop.replace('#','0x');
+  this.applyPlayerColors(["Upper_Socks"],n_color);
+  $("#SocksTop").css("border-color", this.selectedColorPlayer1.SocksTop);
+ }
+ else if(event.target ==  c10){
+  let n_color:any = this.selectedColorPlayer1.SKin.replace('#','0x');
+  this.applyPlayerColors(["Model"],n_color);
+  $("#SKin").css("border-color", this.selectedColorPlayer1.SKin);
+ }
+
+
+});
+
+//equipments
+Coloris.setInstance('.instance1', {
   closeButton: true,
   closeLabel: 'OK',
   clearButton: true,
   clearLabel: 'Clear',
   onChange: (color:any) =>{this.selectedColor = color}
 });
-
-
-document.addEventListener('close', event => {
-  this.applyColor();
+//border clors
+const commonSwatches=[
+  '#60db0d','#59D5E0','#E26EE5','#268b07','#e76f51',
+  '#d62828','#F5DD61','#FAA300','#0096c7','#00b4d8','#48cae4'];
+Coloris.setInstance('.instance2', {
+  swatchesOnly: true,
+  swatches: commonSwatches,
+  onChange: (color:any) =>{
+    this.selectedColorPitchBorder = color;
+  }
 });
 
 
+//line color
+Coloris.setInstance('.instance3', {
+  swatchesOnly: true,
+  swatches:commonSwatches,
+  onChange: (color:any) =>{
+    this.selectedColorPitchLine = color;
+  }
+});
+//pitch color
+Coloris.setInstance('.instance4', {
+  swatchesOnly: true,
+  swatches:commonSwatches,
+  onChange: (color:any) =>{
+    this.selectedColorPitch = color;
+  }
+});
+
+
+
+
+
+const commonSwatchesPlayer =[
+  '#0000ff','#ffff00','#00ff00','#268b07','#e76f51',
+  '#d62828','#F5DD61','#FAA300','#0096c7','#FFFFFF','#000000'];
+//Shirt Color
+Coloris.setInstance('.instance5', {
+  swatchesOnly: true,
+  swatches:commonSwatchesPlayer,
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.Shirt = color;
+  }
+});
+
+//Shoulder Color
+Coloris.setInstance('.instance6', {
+  swatchesOnly: true,
+  swatches:commonSwatchesPlayer,
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.Shoulder = color;
+  }
+});
+//Short Color
+Coloris.setInstance('.instance7', {
+  swatchesOnly: true,
+  swatches:commonSwatchesPlayer,
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.Short = color;
+  }
+});
+//Socks Color
+Coloris.setInstance('.instance8', {
+  swatchesOnly: true,
+  swatches:commonSwatchesPlayer,
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.Socks = color;
+  }
+});
+//SocksTop Color
+Coloris.setInstance('.instance9', {
+  swatchesOnly: true,
+  swatches:commonSwatchesPlayer,
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.SocksTop= color;
+  }
+});
+//SocksTop Color
+Coloris.setInstance('.instance10', {
+  swatchesOnly: true,
+  swatches:[
+    '#fbf3ed','#f3d8c4','#c58c85', 
+    '#ecbcb4', '#d1a3a4', '#a1665e', 
+    '#503335','#3d210b'],
+  onChange: (color:any) =>{
+    if(color.length<1){return;}
+    this.selectedColorPlayer1.SKin= color;
+  }
+});
+
+
+
+}
+applyPlayerColors(parts:Array<string>,n_color:any){
+  if (this.lastSelectedObject.container &&  
+    this.lastSelectedObject.container.userData.Me._active &&
+    this.lastSelectedObject.container.userData.Me.isPlayer){
+      let player:any = this.lastSelectedObject.container.userData.Me;
+      parts.forEach((part:string)=>{
+      player.color_part(part,n_color);
+      player.color_part(part,n_color);
+    })
+    
+  }
 }
 private applyColor(){
  
   if(this.selectedColor.length<1){return;}
   console.log("applyColor",this.selectedColor);
   if (this.lastSelectedObject.container &&  this.lastSelectedObject.container.userData.Me._active){
-      //get object
-    let model = this.lastSelectedObject.container.userData.Me._currentOBj.scene;
-    //color as number
-    let n_color:any = this.selectedColor.replace('#','0x');
-    //apply color
-      model.traverse((node:any) =>{
-        if (node.isMesh) {
-          console.log("Mesh",node.name)
-          if( 
-            node.name != 'flag' &&
-            node.name != 'hole'&&
-            node.name != 'steps'&&
-            node.name != 'pole2'&&
-            node.name != 'net'&&
-            node.name != 'goal_2'
-            ){
-            node.material.color.setHex(n_color);
-          }
-          if( node.name.indexOf('football')!=-1 ){
-           
-            node.material.color.setHex(n_color);
-            
-            
-          }
-      }
-      });
+    // console.log('isPlayer',this.lastSelectedObject.container.userData.Me.isPlayer)
+    if(this.lastSelectedObject.container.userData.Me.isPlayer){return;}
+    this.lastSelectedObject.container.userData.Me.applyEquipmentColor(this.selectedColor)
   }
 }
+
     private onWindowResize(): void
     {
         this.camera._camera.aspect = window.innerWidth / window.innerHeight;
@@ -316,6 +522,83 @@ private applyColor(){
 
 
       //object tool
+
+
+      //export scene as png image
+      $('#bt_export').on('pointerdown', (event: any) => {
+        var dataURL = this.renderer.domElement.toDataURL();
+        var link = document.createElement("a");
+        link.download = "screen.png";
+        link.href = dataURL;
+        link.target = "_blank";
+        link.click();
+      });
+
+
+      $('#bt_clone').on('pointerdown', (event: any) => {
+        if (this.lastSelectedObject.container &&  this.lastSelectedObject.container.userData.Me._active){
+          //clone equipment
+        
+            console.log("clone equipment");
+            let id:number = this.lastSelectedObject.container.userData.Me.EquipmentId;
+           
+            let actual_rotation:number = 0;
+            let actual_CurrentScale:number = 1;
+            let actual_scaleCounter:number = 1;
+
+            let actual_color =null;
+
+            if(this.lastSelectedObject.container){
+
+              actual_rotation = this.lastSelectedObject.container.rotation.y;
+              actual_CurrentScale= this.lastSelectedObject.container.userData.Me.CurrentScale;
+              actual_scaleCounter= this.lastSelectedObject.container.userData.Me.scaleCounter;
+             
+
+              //clone equipment
+              if(this.lastSelectedObject.container.userData.Me.isEquipment){
+              actual_color = this.lastSelectedObject.container.userData.Me.usedColor;
+              
+              let clonedbData:any={
+                actual_CurrentScale:actual_CurrentScale,
+                actual_scaleCounter:actual_scaleCounter,
+                rotation: actual_rotation,
+                color:actual_color
+              }
+               this.addEquipment(id,clonedbData);
+              }
+
+
+               //clone player
+               if(this.lastSelectedObject.container.userData.Me.isPlayer){
+              
+                actual_color = this.lastSelectedObject.container.userData.Me.defaultColors;
+                
+                let clonedbData:any={
+                  actual_CurrentScale:actual_CurrentScale,
+                  actual_scaleCounter:actual_scaleCounter,
+                  rotation: actual_rotation,
+                }
+
+                this.addPlayer(this.lastSelectedObject.container.userData.Me.playerid,clonedbData);
+              }
+
+            }
+
+            
+           
+          
+
+
+
+
+
+
+
+          
+        }
+        });
+
       $('#bt_scale').on('pointerdown', (event: any) => {
       if (this.lastSelectedObject.container &&  this.lastSelectedObject.container.userData.Me._active){
         this.lastSelectedObject.container.userData.Me.scaleObj(0.1);
@@ -366,18 +649,29 @@ private applyColor(){
           });
 
 
+
           ActivateRightBt();
+
+           
+
+
+          
+
     }
-    private addEquipment(id:number){
+    private addEquipment(id:number,clonedbData:any){
       console.log( equipments_Football[id].pathObj)
       this.highlightSelected();
       const mp:BaseObj = new BaseObj(
         this.scene,
-        0.12,
+        0.2,
         this.addedObgetcs.length,
         eqipments_Football_path,
         equipments_Football[id].pathObj,
-        equipments_Football[id].SC);
+        equipments_Football[id].SC,clonedbData);
+
+        mp.isEquipment = true;
+        mp.EquipmentId = id;
+
       mp.container.position.z = Math.random()*2
       this.pickableObjects.push(mp._rotate);
       this.pickableObjects.push(mp._move);
@@ -387,54 +681,37 @@ private applyColor(){
         Action:''
       }
     }
+    private ApplyTerrainTexture(index:number){
+      console.log('ApplyTerrainTexture',index);
+      handlePitcheselection(index);
+      this.terrain.setPitcheTexture(index);
+    }
 
-    private addPlayer() {
+    private addPlayer(index:number,clonedbData:any) {
       this.highlightSelected();
       const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length,
-        '../assets/obj',
-        '/char.gltf',1);//rp_mei_posed_001_30k.fbx
-      player.container.position.x = Math.random()*2
+        players_path,
+        players_data[index].pathObj,
+        players_data[index].SC,
+        this.selectedColorPlayer1,
+        clonedbData
+        );
+        player.playerid = index;
+      player.container.position.x = Math.random()*2;
       this.pickableObjects.push(player.clickableZone);
       this.pickableObjects.push(player._rotate);
       this.pickableObjects.push(player._move);
       this.addedObgetcs.push(player);
-
-
-     /* setTimeout(() => {
-        let objClone:any = skelotonUtils.clone(player._currentOBj);
-        this.scene.add(objClone);
-      }, 3000);*/
 
       
-
-
-
-
       this.lastSelectedObject={
         container:player.container,
         Action:''
       }
-//console.log('pickableObjects',this.pickableObjects)
-//console.log('addedObgetcs',this.addedObgetcs)
+      //this.applyPlayerColors
+     
     }
-    private addPlayer2() {
-      this.highlightSelected();
-      const player:Player = new Player(this.scene,0.2,this.addedObgetcs.length,
-        '../assets/obj',
-        '/uploads_files_2788856_char_Adam.fbx',17);
-      player.container.position.x = Math.random()*2
-      this.pickableObjects.push(player.clickableZone);
-      this.pickableObjects.push(player._rotate);
-      this.pickableObjects.push(player._move);
-      this.addedObgetcs.push(player);
-
-      this.lastSelectedObject={
-        container:player.container,
-        Action:''
-      }
-//console.log('pickableObjects',this.pickableObjects)
-//console.log('addedObgetcs',this.addedObgetcs)
-    }
+   
     highlightSelected(){
       if(this.selectedObject.container){
         console.log(this.selectedObject.container.name)

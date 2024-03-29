@@ -33,16 +33,27 @@
       <div class="d-flex justify-content-end col-6 m-0 ps-2" >
         <div id="objTool" style="height: 32px;">
           <img id="loaderImg" style="display: none;" class="clickable" src="./assets/images/loader.png" />
+          <img id="bt_export" class="clickable" src="./assets/images/exportbt.png" />
+          <img id="bt_clone" class="clickable" src="./assets/images/clone.png" />
           <img id="bt_trash" class="clickable" src="./assets/images/trash.png" />
           <img id="bt_scale" class="clickable" src="./assets/images/scale.png" />
           <img id="bt_flip"  class="clickable" src="./assets/images/flip.png" />
         <!-- <img id="bt_paint" class="clickable" src="./assets/images/paint.png"/>-->
-         <input type="text" data-coloris style="width: 94px;">
+         <input type="text" data-coloris  class="coloris instance1" style="width: 94px;">
+
         </div>
       </div>
     </div>
       <!-- right tools-->
       <div class="rightButtons">
+        <div id='PlayersBt' class="divTitle nonSelectedBt">
+          <img src="./assets/images/004-soccer.png">
+          <p class="title">Players</p>
+        </div>
+        <div id='kitsBt' class="divTitle nonSelectedBt">
+          <img src="./assets/images/paint.png">
+          <p class="title">KITS</p>
+        </div>
       <div id='EquipmentsBt' class="divTitle nonSelectedBt">
         <img src="./assets/images/002-cone.png">
         <p class="title">Equipments</p>
@@ -51,14 +62,96 @@
         <img src="./assets/images/007-field.png">
         <p class="title">Pitches</p>
       </div>
+
+
+      <div id='bgsBt' class="divTitle nonSelectedBt">
+        <img src="./assets/images/stadium.png">
+        <p class="title">background</p>
+      </div>
+
     </div>
+      <div id="players" class="rightTools">
+      <div id="playersC" class="row" style="width: 100%; height:auto; margin-left: 1%;"></div>
+      </div>
+      <div id="kits" class="rightTools">
+        <div id="kitsC" class="row" style="width: 100%; height: auto;">
+
+          <div class="colorp">
+            <p>Shirt Color</p>
+              <div id="Shirt" class="playerClothes">
+                <img src="./assets/images/002-tshirt.png" style="max-width: 100%;">
+              </div>
+            <input type="text" data-coloris  class="coloris instance5" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>Shoulder Color</p>
+            <div id="Shoulder" class="playerClothes">
+              <img src="./assets/images/003-t-shirt.png" style="max-width: 100%;">
+            </div>
+            <input type="text" data-coloris  class="coloris instance6" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>Short Color</p>
+            <div id="Short" class="playerClothes">
+              <img src="./assets/images/004-football-shorts.png" style="max-width: 100%;">
+            </div>
+            <input type="text" data-coloris  class="coloris instance7" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>Socks Color</p>
+            <div  id="Socks" class="playerClothes">
+              <img src="./assets/images/005-socks.png" style="max-width: 100%;">
+            </div>
+            <input type="text" data-coloris  class="coloris instance8" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>SocksTop Color</p>
+            <div id="SocksTop" class="playerClothes">
+              <img src="./assets/images/topsocks.png" style="max-width: 100%;">
+            </div>
+            <input type="text" data-coloris  class="coloris instance9" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>SKin Color</p>
+            <div id="SKin" class="playerClothes">
+              <img src="./assets/images/human-body.png" style="max-width: 100%;">
+            </div>
+            <input type="text" data-coloris  class="coloris instance10" style="width: 94px;">
+          </div>
+        </div>
+        </div>
+
       <div id="equipments" class="rightTools">
       <div id="equipmentsC" class="row" style="width: 100%; height: 100%;"></div>
       </div>
 
       <div id="pitches" class="rightTools">
-        <div id="pitchesC" class="" style="width: 100%; height: 100%;"></div>
+        <div id="pitchesC" class="" style="width: 100%; height: auto;">
+          <div class="colorp">
+            <p>Border Color</p>
+            <input type="text" data-coloris  class="coloris instance2" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>line Color</p>
+            <input type="text" data-coloris  class="coloris instance3" style="width: 94px;">
+          </div>
+          <div class="colorp">
+            <p>Pitch Color</p>
+            <input type="text" data-coloris  class="coloris instance4" style="width: 94px;">
+          </div>
         </div>
+        </div>
+
+        <div id="bgs" class="rightTools">
+          <div id="bgsC" class="" style="width: 100%; height: auto;">
+            <div class="colorp">
+              <p>Select background</p>
+            </div>
+          </div>
+          </div>
+
+
+
 
     </div> 
 </body>

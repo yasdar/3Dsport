@@ -4,6 +4,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+import {MeshSurfaceSampler} from'three/examples/jsm/math/MeshSurfaceSampler';
 
 import  { Tools_Options } from '../config';
 import $ from "jquery";
@@ -18,19 +19,31 @@ export class BaseObj {
 
     CurrentScale:number = 1;
     scaleCounter:number = 1;
+    usedColor:any= null;
+
+
+
+
     _index:number;
 
     _path:string;
     _pathOBJ:string;
     _currentOBj:any;
     _scaleFactor:number=1;
+    isPlayer:boolean = false;
+    playerid:number;
+    
+    isEquipment:boolean = false;
+    EquipmentId:number;
+    cloneData:any;
     constructor(
         scene:THREE.Scene,
         terrainZ:number,
         index:number,
         path:string,
         pathObj:string,
-        scaleFactor:number) {
+        scaleFactor:number,
+        clonedbData:any) {
     this.scene = scene;
     this._path = path;
     this._pathOBJ = pathObj;
@@ -45,11 +58,10 @@ export class BaseObj {
     this.addTools();
     this.addObj();
 
-
     $('#bt_scale').removeClass('flipped');
     $('#objTool').hide();
     //$('#loaderImg').show();
-    
+    this.cloneData = clonedbData;
     }showTools(){
 
         this._rotate.visible = true;
@@ -92,16 +104,18 @@ export class BaseObj {
         this.clickableZone.position.set(0, 1, 0);
         this.clickableZone.name = 'clickableZone';
         this.container.add(this.clickableZone);
+        this.clickableZone.visible = false;
          //rotation tool
-        const textTureLoader = new THREE.TextureLoader()
-        let texture = textTureLoader.load('../assets/images/rot.png')
+       // const textTureLoader = new THREE.TextureLoader()
+        //let texture = textTureLoader.load('../assets/images/rot.png')
         let circleMat = new THREE.MeshBasicMaterial({
-          map: texture,
-          side: THREE.DoubleSide,
-          //transparent: true,
-          //opacity: 0.5,
+          //map: texture,
+          //side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.5,
+          color:0xffff00
         })
-        this._rotate = new THREE.Mesh(new THREE.CircleGeometry(0.75), circleMat);
+        this._rotate = new THREE.Mesh(new THREE.CircleGeometry(0.75,8), circleMat);
         this._rotate.rotation.x = -Math.PI / 2;
         this._rotate.position.set(0, 0.01, 0);
         this._rotate.name = '_rotate';
@@ -109,10 +123,11 @@ export class BaseObj {
 
         //moving tool
         this._move = new THREE.Mesh(
-            new THREE.CircleGeometry(0.33,6),
+            new THREE.CircleGeometry(0.4,12),
             new THREE.MeshStandardMaterial({
               color: 0xff0000,
-              opacity: 1,
+              opacity: 0.4,
+              transparent:true
             })
           )
           
@@ -133,8 +148,8 @@ export class BaseObj {
                 this._pathOBJ,//'/rp_mei_posed_001_30k.obj'
               (object) => {
                 object.name = this._pathOBJ;
-               // console.log("loaded obj",object)
-    
+                console.log("loaded obj",object)
+                this._currentOBj = object;
                this.addLoadedObj(object);
               },
               this.onProgress,this.onError
@@ -150,8 +165,8 @@ export class BaseObj {
                // object.scene.castShadow = true;
                 console.log("loaded .glb or .gltf",object)
                 this._currentOBj = object;
-               this.addLoadedObj(object.scene);
-              this.checkNodes(object);
+              this.addLoadedObj(object.scene);
+                this.checkNodes(object);
               },
               this.onProgress,this.onError
             )
@@ -196,7 +211,7 @@ export class BaseObj {
         //GLTFLoader
     }
     addLoadedObj(object:THREE.Group){
-      
+     // console.log('this.container',this.container)
       this.container.add(object);
       
      // console.log(object)
@@ -208,7 +223,23 @@ export class BaseObj {
       //$('#loaderImg').hide();
       $('#objTool').show();
     
+      this.objectIsReady();
+     
+    }
+    objectIsReady(){
       
+      console.log('cloneData',this.cloneData);
+      if(this.cloneData){
+        //apply scale
+        this.CurrentScale = this.cloneData.actual_CurrentScale;
+        this.scaleCounter = this.cloneData.actual_scaleCounter;
+        this.scaleObj(0);
+        //apply rotation
+        this.container.rotation.y = this.cloneData.rotation;
+        //color
+        this.applyEquipmentColor(this.cloneData.color);
+
+      }
     }
     onError(err: any){
     console.log("error loading!",err)
@@ -274,11 +305,36 @@ export class BaseObj {
 
 
     }
-
-
- 
+  
     update(){
       if(this.mixer){this.mixer.update(new THREE.Clock().getDelta());}
+    }
+    applyEquipmentColor(selectedColor:string){
+       //get object
+    let model = this._currentOBj.scene;
+    //color as number
+    this.usedColor = selectedColor;
+    let n_color:any = selectedColor.replace('#','0x');
+    //apply color
+      model.traverse((node:any) =>{
+        if (node.isMesh) {
+          console.log("Mesh",node.name)
+          if( 
+            node.name != 'flag' &&
+            node.name != 'hole'&&
+            node.name != 'steps'&&
+            node.name != 'pole2'&&
+            node.name != 'net'&&
+            node.name != 'goal_2'
+            ){
+            node.material.color.setHex(n_color);
+          }
+          if( node.name.indexOf('football')!=-1 ){
+           
+            node.material.color.setHex(n_color);
+          }
+      }
+      });
     }
 
 }
