@@ -193,7 +193,6 @@ export class BaseObj {
 					.load( this._pathOBJ,  ( materials )=> {
 
 						materials.preload();
-
 						new OBJLoader()
 							.setMaterials( materials )
 							.setPath( this._path )
@@ -310,10 +309,12 @@ export class BaseObj {
       if(this.mixer){this.mixer.update(new THREE.Clock().getDelta());}
     }
     applyEquipmentColor(selectedColor:string){
+     if( !selectedColor ){return;}
        //get object
     let model = this._currentOBj.scene;
     //color as number
     this.usedColor = selectedColor;
+  
     let n_color:any = selectedColor.replace('#','0x');
     //apply color
       model.traverse((node:any) =>{

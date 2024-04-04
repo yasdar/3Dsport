@@ -522,7 +522,46 @@ private applyColor(){
 
 
       //object tool
+      
+      //export scene as png image
+      $('#bt_save').on('pointerdown', (event: any) => {
 
+        //collect equpment data to save
+        console.log(this.addedObgetcs);
+
+        let _id = 0;
+        if(this.addedObgetcs[0].isPlayer){
+          _id = this.addedObgetcs[0].playerid;
+          console.log('save player');
+        }
+        if(this.addedObgetcs[0].isEquipment){
+          _id = this.addedObgetcs[0].EquipmentId;
+          console.log('save equipment');
+        }
+
+        let SaveObj:any={
+          Id:_id,
+          actual_CurrentScale:this.addedObgetcs[0].CurrentScale,
+          actual_scaleCounter:this.addedObgetcs[0].scaleCounter,
+          rotation:this.addedObgetcs[0].container.rotation.y,
+          color:this.addedObgetcs[0].usedColor,
+          position:{
+            x:this.addedObgetcs[0].container.position.x,
+            y:this.addedObgetcs[0].container.position.y,
+            z:this.addedObgetcs[0].container.position.z}
+        }
+        console.log(SaveObj);
+
+        //show saved data
+        setTimeout(() => {
+        //  this.addEquipment(this.addedObgetcs[0].EquipmentId,SaveObj);
+          //set position
+         // this.lastSelectedObject.container?.position.copy( SaveObj.position );
+        }, 4000);
+        
+      
+      
+        });
 
       //export scene as png image
       $('#bt_export').on('pointerdown', (event: any) => {
