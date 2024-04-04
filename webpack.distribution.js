@@ -44,9 +44,9 @@ module.exports = {
                     to:"index.html"//rename it
                 },
                 {
-                    // all files inside src/assets folder
-                    from: 'assets/*/*',
-                    context: 'src/'
+                    from: __dirname + '/src/assets',
+                    to: './assets',
+                    noErrorOnMissing: false
                 },
                 
                // { from: 'node_modules/pixi.js/dist/pixi.min.js', to: PATHS.dist },

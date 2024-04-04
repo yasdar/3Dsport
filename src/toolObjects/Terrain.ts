@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { pitchesTextures } from '../config';
+import { pitchesTextures, pitchmarks } from '../config';
 
 export class Terrain {
  _scene:THREE.Scene;
@@ -10,8 +10,7 @@ export class Terrain {
  terrainLimits:any;
 
  _terrainMeshTop:THREE.Mesh;
- tracagePath:string = '../assets/obj/pitches/obj';
- tracageOBJ:string = '/pitchmarks_0001_standard.glb';
+
  _currentOBj:any;
  _scaleFactor:number = 0.01;
  CurrentTextureIndex:number = 0;
@@ -66,11 +65,11 @@ export class Terrain {
 
     //add tracage
     new GLTFLoader()
-    .setPath(this.tracagePath)//'../assets/obj'
+    .setPath(pitchmarks.path)//'../assets/obj'
     .load(
-      this.tracageOBJ,//'/pitchmarks_0001_standard
+      pitchmarks.obj,//'/pitchmarks_0001_standard
       (object) => {
-        object.scene.name = this.tracageOBJ;
+        object.scene.name = pitchmarks.obj;
         console.log("loaded .glb Terrain")
         this._currentOBj = object;
        this.addLoadedObj(object.scene);

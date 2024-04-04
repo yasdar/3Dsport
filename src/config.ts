@@ -9,7 +9,7 @@ export const Tools_Options ={
     static loadedObjects:Array<any>=[];
 }*/
 
-export const eqipments_Football_path:string = "../assets/obj/equipmentsFootBall/obj";
+export const eqipments_Football_path:string = "./assets/obj/equipmentsFootBall/obj";
 export const equipments_Football =[
 
     {name:"flag",pathObj:"/equipment_0001_flag.glb",SC:0.6},
@@ -46,14 +46,16 @@ export const equipments_Football =[
 
 
 export const pitchesTextures=[
-    {name:"grassIco",texture:'../assets/obj/pitches/img/grass.png',opacity:0.4},
-    {name:"checkerIco",texture:'../assets/obj/pitches/img/checker.png',opacity:1},
-    {name:"stripesIco",texture:'../assets/obj/pitches/img/stripes.png',opacity:1},
-    {name:"circlesIco",texture:'../assets/obj/pitches/img/circles.png',opacity:1}
+    {name:"grassIco",texture:'./assets/obj/pitches/img/grass.png',opacity:0.4},
+    {name:"checkerIco",texture:'./assets/obj/pitches/img/checker.png',opacity:1},
+    {name:"stripesIco",texture:'./assets/obj/pitches/img/stripes.png',opacity:1},
+    {name:"circlesIco",texture:'./assets/obj/pitches/img/circles.png',opacity:1}
 ]
 
+export const pitchmarks={path:'./assets/obj/pitches/obj',obj:'/pitchmarks_0001_standard.glb'};
 
-export const players_path:string = "../assets/obj/player2/Poses Obj";
+
+export const players_path:string = "./assets/obj/player2/Poses Obj";
 export const players_data =[
     {name:"celebration2",pathObj:"/Celebration 2.obj",SC:0.55},
     {name:"celebration3",pathObj:"/Celebration 3.obj",SC:0.55},
