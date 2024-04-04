@@ -13,7 +13,7 @@ export const eqipments_Football_path:string = "./assets/obj/equipmentsFootBall/o
 export const equipments_Football =[
 
     {name:"flag",pathObj:"/equipment_0001_flag.glb",SC:0.6},
-    {name:"football",pathObj:"/equipment_0002_football.glb",SC:0.2},
+{name:"football",pathObj:"/equipment_0002_football.glb",SC:0.2*0.6},
 
    // {name:"cone",pathObj:"/equipment_0003_cone.glb",SC:0.3},
     {name:"hurdle",pathObj:"/equipment_0005_hurdle.glb",SC:0.2},
@@ -57,9 +57,9 @@ export const pitchmarks={path:'./assets/obj/pitches/obj',obj:'/pitchmarks_0001_s
 
 export const players_path:string = "./assets/obj/player2/Poses Obj";
 export const players_data =[
-    {name:"celebration2",pathObj:"/Celebration 2.obj",SC:0.55},
+    {name:"celebration2",pathObj:"/Celebration 2.obj",SC:0.6},
     {name:"celebration3",pathObj:"/Celebration 3.obj",SC:0.55},
-    {name:"shooting",pathObj:"/Shooting.obj",SC:0.53},
+    {name:"shooting",pathObj:"/Shooting.obj",SC:0.54},
     {name:"Stand On Ball",pathObj:"/Stand On Ball.obj",SC:0.60},
     {name:"tackle",pathObj:"/Tackle.obj",SC:0.25}
 ];
